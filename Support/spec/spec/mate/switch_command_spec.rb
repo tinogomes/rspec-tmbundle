@@ -1,3 +1,4 @@
+require 'spec_helper'
 require File.dirname(__FILE__) + '/../../../lib/spec/mate/switch_command'
 
 module Spec

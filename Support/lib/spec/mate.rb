@@ -26,9 +26,9 @@ else
 end
 
 begin
-  require 'spec/autorun'
-rescue LoadError
   require 'rspec/core'
+rescue LoadError
+  require 'spec/autorun'
 end
 
 def rspec2?

@@ -1,10 +1,10 @@
 require 'spec_helper'
-require File.dirname(__FILE__) + '/../../../lib/spec/mate/runner'
+require File.expand_path('../../../../lib/spec/mate/runner', __FILE__)
 require 'stringio'
 
 describe Spec::Mate::Runner do
   def set_env
-    root = File.expand_path(File.dirname(__FILE__) + '../../../../../../rspec-core')
+    root = File.expand_path('../../../../../../rspec-core', __FILE__)
     ENV['TM_RSPEC_HOME'] = "#{root}"
     ENV['TM_PROJECT_DIRECTORY'] = File.expand_path(File.dirname(__FILE__))
     ENV['TM_FILEPATH'] = nil
@@ -29,9 +29,6 @@ describe Spec::Mate::Runner do
     $".delete_if do |path|
       path =~ /example_failing_spec\.rb/
     end
-    # Spec::Runner.options.example_groups.delete_if do |example_group|
-      # example_group.description == "An example failing spec"
-    # end
   end
 
   describe "#run_file" do

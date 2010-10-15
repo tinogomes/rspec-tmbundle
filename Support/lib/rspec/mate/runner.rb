@@ -1,4 +1,4 @@
-module Spec
+module RSpec
   module Mate
     class Runner
       def run_files(stdout, options={})

@@ -1,8 +1,7 @@
 require 'spec_helper'
-require File.expand_path('../../../../lib/spec/mate/runner', __FILE__)
 require 'stringio'
 
-describe Spec::Mate::Runner do
+describe RSpec::Mate::Runner do
   def set_env
     root = File.expand_path('../../../../../../rspec-core', __FILE__)
     ENV['TM_RSPEC_HOME'] = "#{root}"
@@ -18,8 +17,8 @@ describe Spec::Mate::Runner do
 
     set_env
 
-    load File.expand_path("#{File.dirname(__FILE__)}/../../../lib/spec/mate.rb")
-    @spec_mate = Spec::Mate::Runner.new
+    load File.expand_path("#{File.dirname(__FILE__)}/../../../lib/rspec/mate.rb")
+    @spec_mate = RSpec::Mate::Runner.new
 
     @test_runner_io = StringIO.new
   end
@@ -100,14 +99,14 @@ describe Spec::Mate::Runner do
     it "should raise exception when TM_PROJECT_DIRECTORY points to bad location" do
       ENV['TM_PROJECT_DIRECTORY'] = __FILE__ # bad on purpose
       lambda do
-        load File.dirname(__FILE__) + '/../../../lib/spec/mate.rb'
+        load File.dirname(__FILE__) + '/../../../lib/rspec/mate.rb'
       end.should_not raise_error
     end
 
     it "should raise exception when TM_RSPEC_HOME points to bad location" do
       ENV['TM_RSPEC_HOME'] = __FILE__ # bad on purpose
       lambda do
-        load File.dirname(__FILE__) + '/../lib/spec_mate.rb'
+        load File.dirname(__FILE__) + '/../lib/rspec_mate.rb'
       end.should raise_error
     end
   end

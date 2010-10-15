@@ -1,7 +1,6 @@
 require 'spec_helper'
-require File.dirname(__FILE__) + '/../../../lib/spec/mate/switch_command'
 
-module Spec
+module RSpec
   module Mate
     describe SwitchCommand do
       class << self
@@ -31,8 +30,8 @@ module Spec
 
       describe "in a regular app" do
         expect_twins [
-          "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/spec/spec/mate/switch_command_spec.rb",
-          "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/lib/spec/mate/switch_command.rb"
+          "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/spec/rspec/mate/switch_command_spec.rb",
+          "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/lib/rspec/mate/switch_command.rb"
         ]
       
         it "should suggest plain spec" do

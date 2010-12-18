@@ -64,6 +64,37 @@ as your package manager, then the simplest thing to do is
 * go to the Advanced tab
 * add a variable named `RUBYOPT` with the value `rubygems`
 
+## Options
+
+You can set the following options in an .rspec-tm file in the root directory of
+your project:
+
+### --rspec-version
+see RSpec-version, above.
+
+### --bundler
+Tell the TMBundle to use Bundler, even if there is no Gemfile (in which case
+you should have the BUNDLER_GEMFILE environment variable set).
+
+### --skip-bundler
+Tell the TMBundle _not_ to use Bundler, even if there is a Gemfile.
+
+## TextMate shell variables
+
+In addition to the standard TextMate shell variables, the RSpec TextMate bundle
+supports the following:
+
+### TM_RSPEC_FORMATTER
+Use to set a custom formatter other than RSpec's textmate formatter. Use the
+full classname e.g. 'Spec::Core::Formatters::WebKit'
+
+### TM_RSPEC_OPTS
+Use this to set RSpec options just as you would in a .rspec file.
+
+### TM_RSPEC_HOME
+If you're hacking on rspec yourself, point this to the rspec-core project
+directory for rspec-2, or the rspec directory for rspec-1.
+
 ## History
 Parts of RSpec.tmbundle is based on Florian Weber's TDDMate.
 

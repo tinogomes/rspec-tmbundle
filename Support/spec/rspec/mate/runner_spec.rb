@@ -110,4 +110,18 @@ describe RSpec::Mate::Runner do
       end.should raise_error
     end
   end
+
+  describe "alternative formatter" do
+    it "should add a custom formatter to the command if TM_RSPEC_FORMATTER is set" do
+      ENV['TM_RSPEC_FORMATTER'] = 'RSpec::Core::Formatters::BaseTextFormatter'
+      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_failing_spec.rb"
+
+      @spec_mate.run_file(@test_runner_io)
+      @test_runner_io.rewind
+      text = @test_runner_io.read
+      text.should =~ /1\) An example failing spec should fail/
+      text.should =~ /2\) An example failing spec should also fail/
+    end
+
+  end
 end

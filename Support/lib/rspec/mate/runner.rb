@@ -25,9 +25,10 @@ module RSpec
       end
 
       def run(stdout, options)
+        formatter = ENV['TM_RSPEC_FORMATTER'] || 'textmate'
+
         argv = options[:files].dup
-        argv << '--format'
-        argv << 'textmate'
+        argv << '--format' << formatter
         if options[:line]
           argv << '--line'
           argv << options[:line]

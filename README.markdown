@@ -2,6 +2,7 @@
 
 ## Installation
 
+    mkdir -p ~/Library/Application\ Support/TextMate/Bundles/
     cd ~/Library/Application\ Support/TextMate/Bundles/
     git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
     osascript -e 'tell app "TextMate" to reload bundles'

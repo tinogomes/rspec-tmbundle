@@ -26,7 +26,6 @@ module RSpec
 
       def run(stdout, options)
         formatter = ENV['TM_RSPEC_FORMATTER'] || 'textmate'
-
         argv = options[:files].dup
         argv << '--format' << formatter
         if options[:line]
@@ -37,11 +36,18 @@ module RSpec
         Dir.chdir(project_directory) do
           if rspec2?
             ::RSpec::Core::Runner.disable_autorun!
-            ::RSpec::Core::Runner.run(argv, STDERR, stdout)
+            ::RSpec::Core::Runner.run(argv, $stderr, stdout)
           else
-            ::Spec::Runner::CommandLine.run(::Spec::Runner::OptionParser.parse(argv, STDERR, stdout))
+            ::Spec::Runner::CommandLine.run(::Spec::Runner::OptionParser.parse(argv, $stderr, stdout))
           end
         end
+      rescue Exception => e
+        require 'pp'
+        stdout << "<h1>Uncaught Exception</h1>" <<
+        "<p>#{e.class}: #{e.message}</p>" <<
+        "<pre>#{e.backtrace.join("\n  ")}</pre>" <<
+        "<h2>Options:</h2>" <<
+        "<pre>#{PP.pp(options, '')}</pre>"
       end
 
       def save_as_last_remembered_file(file)

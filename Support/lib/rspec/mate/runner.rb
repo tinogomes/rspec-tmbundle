@@ -1,4 +1,5 @@
 require 'stringio'
+require 'cgi'
 
 module RSpec
   module Mate
@@ -50,13 +51,17 @@ module RSpec
         require 'pp'
         stdout << "<h1>Uncaught Exception</h1>" <<
         "<p>#{e.class}: #{e.message}</p>" <<
-        "<pre>#{e.backtrace.join("\n  ")}</pre>" <<
+        "<pre>" <<
+          CGI.escapeHTML(e.backtrace.join("\n  ")) << 
+        "</pre>" <<
         "<h2>Options:</h2>" <<
-        "<pre>#{PP.pp(options, '')}</pre>"
+        "<pre>" << 
+          CGI.escapeHTML(PP.pp(options, '')) <<
+        "</pre>"
       ensure
         unless stderr.string == ""
           stdout << "<h2>stderr:</h2>" << 
-           "<pre>" << stderr.string << "</pre>"
+           "<pre>" << CGI.escapeHTML(stderr.string) << "</pre>"
         end
         $stderr = old_stderr
       end

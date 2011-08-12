@@ -38,6 +38,7 @@ describe RSpec::Mate::Runner do
       @test_runner_io.rewind
       html = @test_runner_io.read
       html.should =~ /Uncaught Exception/
+      html.should_not =~ /^  .%<.*$/
     end
 
     it "should show standard error output nicely in a PRE block" do
@@ -46,7 +47,7 @@ describe RSpec::Mate::Runner do
       @spec_mate.run_file(@test_runner_io)
       @test_runner_io.rewind
       html = @test_runner_io.read
-      html.should =~ /#{Regexp.escape("<h2>stderr:</h2><pre>milk\nsugar\n</pre>")}/
+      html.should =~ /#{Regexp.escape("<h2>stderr:</h2><pre>2 + 2 = 4\n4 &lt; 8\n</pre>")}/
     end
   end
 

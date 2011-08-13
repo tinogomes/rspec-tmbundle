@@ -30,6 +30,27 @@ describe RSpec::Mate::Runner do
     end
   end
 
+  describe "#run" do
+    it "should show a nicely formatted error when there's an uncaught exception" do
+      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_syntax_error_spec.rb"
+
+      @spec_mate.run_file(@test_runner_io)
+      @test_runner_io.rewind
+      html = @test_runner_io.read
+      html.should =~ /Uncaught Exception/
+      html.should_not =~ /^  .%<.*$/
+    end
+
+    it "should show standard error output nicely in a PRE block" do
+      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_stderr_spec.rb"
+
+      @spec_mate.run_file(@test_runner_io)
+      @test_runner_io.rewind
+      html = @test_runner_io.read
+      html.should =~ /#{Regexp.escape("<h2>stderr:</h2><pre>2 + 2 = 4\n4 &lt; 8\n</pre>")}/
+    end
+  end
+
   describe "#run_file" do
     it "should run whole file when only file specified" do
       ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_failing_spec.rb"

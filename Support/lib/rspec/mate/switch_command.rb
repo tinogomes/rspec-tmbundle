@@ -43,6 +43,7 @@ module RSpec
               path = path.gsub(/\.rb$/, "_spec.rb")
               path = path.gsub(/\.erb$/, ".erb_spec.rb")
               path = path.gsub(/\.haml$/, ".haml_spec.rb")
+              path = path.gsub(/\.slim$/, ".slim_spec.rb")
               path = path.gsub(/\.rhtml$/, ".rhtml_spec.rb")
               path = path.gsub(/\.rjs$/, ".rjs_spec.rb")
             when 'spec' then
@@ -50,6 +51,7 @@ module RSpec
               path = path.gsub(/\.rhtml_spec\.rb$/, ".rhtml")
               path = path.gsub(/\.erb_spec\.rb$/, ".erb")
               path = path.gsub(/\.haml_spec\.rb$/, ".haml")
+              path = path.gsub(/\.slim_spec\.rb$/, ".slim")
               path = path.gsub(/_spec\.rb$/, ".rb")
               if framework.rails? || framework.merb?
                 path = path.gsub(/\/spec\/lib\//, "/lib/")

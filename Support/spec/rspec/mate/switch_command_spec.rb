@@ -125,7 +125,12 @@ EOF
           "/a/full/path/app/views/mooky/show.html.haml",
           "/a/full/path/spec/views/mooky/show.html.haml_spec.rb"
         ]
-      
+
+        expect_twins [
+          "/a/full/path/app/views/mooky/show.html.slim",
+          "/a/full/path/spec/views/mooky/show.html.slim_spec.rb"
+        ]
+
         expect_twins [
           "/a/full/path/app/views/mooky/show.rhtml",
           "/a/full/path/spec/views/mooky/show.rhtml_spec.rb"
@@ -164,6 +169,10 @@ EOF
 
         it "should suggest view spec for haml" do
           "/a/full/path/spec/views/mooky/show.html.haml_spec.rb".should be_a("view spec")
+        end
+
+        it "should suggest view spec for slim" do
+          "/a/full/path/spec/views/mooky/show.html.slim_spec.rb".should be_a("view spec")
         end
         
         it "should suggest an rjs view spec" do

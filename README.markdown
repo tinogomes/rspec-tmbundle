@@ -1,6 +1,7 @@
 # RSpec TextMate Bundle
 
 ## Installation
+
     mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
     cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
     git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
@@ -85,7 +86,7 @@ In addition to the standard TextMate shell variables, the RSpec TextMate bundle
 supports the following:
 
 ### TM_RSPEC_FORMATTER
-Use to set a custom formatter other than RSpec's textmate formatter. Use the
+Use to set a custom formatter other than RSpec's TextMate formatter. Use the
 full classname e.g. 'Spec::Core::Formatters::WebKit'
 
 ### TM_RSPEC_OPTS
@@ -94,6 +95,26 @@ Use this to set RSpec options just as you would in a .rspec file.
 ### TM_RSPEC_HOME
 If you're hacking on rspec yourself, point this to the rspec-core project
 directory for rspec-2, or the rspec directory for rspec-1.
+
+## RVM Integration
+
+There are lots of ways to configure TextMate to work with rvm, but this is the
+one the we recommend:
+
+1. Copy the following into ~/.rvm/bin/textmate_ruby
+
+       #!/usr/bin/env sh
+       source ~/.rvm/scripts/rvm
+       cd .
+       exec ruby "$@"
+
+2. Set up a `TM_RUBY` option in TextMate/Preferences/Advanced/Shell Variables
+   that points to the textmate_ruby command.
+
+Learn more at:
+
+* [http://beginrescueend.com/integration/textmate/](http://beginrescueend.com/integration/textmate/)
+* [http://groups.google.com/group/rubyversionmanager/browse_thread/thread/64b84bbcdf49e9b?fwc=1&pli=1](http://groups.google.com/group/rubyversionmanager/browse_thread/thread/64b84bbcdf49e9b?fwc=1&pli=1)
 
 ## History
 Parts of RSpec.tmbundle is based on Florian Weber's TDDMate.

@@ -1,9 +1,8 @@
 # RSpec TextMate Bundle
 
 ## Installation
-
-    mkdir -p ~/Library/Application\ Support/TextMate/Bundles/
-    cd ~/Library/Application\ Support/TextMate/Bundles/
+    mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+    cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
     git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
     osascript -e 'tell app "TextMate" to reload bundles'
 

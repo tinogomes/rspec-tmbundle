@@ -2,12 +2,10 @@
 
 ## Installation
 
-```
-mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
-cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
-git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
-osascript -e 'tell app "TextMate" to reload bundles'
-```
+    mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+    cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+    git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
+    osascript -e 'tell app "TextMate" to reload bundles'
 
 ## Support for both RSpec-1 and RSpec-2
 
@@ -103,17 +101,15 @@ directory for rspec-2, or the rspec directory for rspec-1.
 There are lots of ways to configure TextMate to work with rvm, but this is the
 one the we recommend:
 
-1. Copy the following into ~/.rvm/bin/textmate_ruby
+First, copy the following into ~/.rvm/bin/textmate_ruby
 
-```
-#!/usr/bin/env sh
-source ~/.rvm/scripts/rvm
-cd .
-exec ruby "$@"
-```
+    #!/usr/bin/env sh
+    source ~/.rvm/scripts/rvm
+    cd .
+    exec ruby "$@"
 
-2. Set up a `TM_RUBY` option in TextMate/Preferences/Advanced/Shell Variables
-   that points to the textmate_ruby command.
+Next, set up a `TM_RUBY` option in TextMate/Preferences/Advanced/Shell
+Variables that points to the textmate_ruby command.
 
 Learn more at:
 

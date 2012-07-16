@@ -157,7 +157,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>^\s*(it|specify)\s+(.*[^do])\s*$</string>
+			<string>^\s*(it|specify)\s+(.*\S)(?&lt;!do)\s*$</string>
 			<key>name</key>
 			<string>meta.rspec.pending</string>
 		</dict>

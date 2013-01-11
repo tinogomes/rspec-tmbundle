@@ -4,3 +4,4 @@ gem "rspec", '~> 2.12.0'
 
 # gem "ruby-debug"
 gem "guard-rspec"
+gem "simplecov"

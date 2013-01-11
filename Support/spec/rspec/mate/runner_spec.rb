@@ -32,17 +32,18 @@ describe RSpec::Mate::Runner do
 
   describe "#run" do
     it "should show a nicely formatted error when there's an uncaught exception" do
-      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_syntax_error_spec.rb"
+      ENV['TM_FILEPATH'] = fixtures_path('example_syntax_error_spec.rb')
 
       @spec_mate.run_file(@test_runner_io)
       @test_runner_io.rewind
       html = @test_runner_io.read
+
       html.should =~ /Uncaught Exception/
       html.should_not =~ /^  .%<.*$/
     end
 
     it "should show standard error output nicely in a PRE block" do
-      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_stderr_spec.rb"
+      ENV['TM_FILEPATH'] = fixtures_path('example_stderr_spec.rb')
 
       @spec_mate.run_file(@test_runner_io)
       @test_runner_io.rewind
@@ -53,11 +54,12 @@ describe RSpec::Mate::Runner do
 
   describe "#run_file" do
     it "should run whole file when only file specified" do
-      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_failing_spec.rb"
+      ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
 
       @spec_mate.run_file(@test_runner_io)
       @test_runner_io.rewind
       html = @test_runner_io.read
+
       html.should =~ @first_failing_spec
       html.should =~ @second_failing_spec
     end
@@ -82,7 +84,7 @@ describe RSpec::Mate::Runner do
 
   describe "#run_last_remembered_file" do
     it "should run all selected files" do
-      @spec_mate.save_as_last_remembered_file "#{@fixtures_path}/example_failing_spec.rb"
+      @spec_mate.save_as_last_remembered_file fixtures_path('example_failing_spec.rb')
       @spec_mate.run_last_remembered_file(@test_runner_io)
       @test_runner_io.rewind
       html = @test_runner_io.read
@@ -93,7 +95,7 @@ describe RSpec::Mate::Runner do
 
   describe "#run_focused" do
     it "should run first spec when file and line 4 specified" do
-      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_failing_spec.rb"
+      ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
       ENV['TM_LINE_NUMBER'] = '4'
 
       @spec_mate.run_focussed(@test_runner_io)
@@ -135,14 +137,23 @@ describe RSpec::Mate::Runner do
   describe "alternative formatter" do
     it "should add a custom formatter to the command if TM_RSPEC_FORMATTER is set" do
       ENV['TM_RSPEC_FORMATTER'] = 'RSpec::Core::Formatters::BaseTextFormatter'
-      ENV['TM_FILEPATH'] = "#{@fixtures_path}/example_failing_spec.rb"
+      ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
 
       @spec_mate.run_file(@test_runner_io)
       @test_runner_io.rewind
       text = @test_runner_io.read
+
       text.should =~ /1\) An example failing spec should fail/
       text.should =~ /2\) An example failing spec should also fail/
     end
+  end
 
+
+private
+
+  def fixtures_path(fixture)
+    fixtures_path = File.expand_path(File.dirname(__FILE__)) + '/../../../fixtures'
+
+    File.join(fixtures_path, fixture)
   end
 end

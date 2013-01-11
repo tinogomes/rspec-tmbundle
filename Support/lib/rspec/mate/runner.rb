@@ -10,19 +10,16 @@ module RSpec
         end
 
         options.merge!({:files => files})
-
         run(stdout, options)
       end
 
       def run_file(stdout, options={})
         options.merge!({:files => [single_file]})
-
         run(stdout, options)
       end
 
       def run_last_remembered_file(stdout, options={})
         options.merge!({:files => [last_remembered_single_file]})
-
         run(stdout, options)
       end
 

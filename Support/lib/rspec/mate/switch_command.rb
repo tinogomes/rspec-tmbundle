@@ -77,12 +77,15 @@ module RSpec
         if path =~ /^(.*?)\/(spec)\/(controllers|helpers|models|views)\/(.*?)$/
           return "#{$3[0..-2]} spec"
         end
+
         if path =~ /^(.*?)\/(app)\/(controllers|helpers|models|views)\/(.*?)$/
           return $3[0..-2]
         end
+
         if path =~ /_spec\.rb$/
           return "spec"
         end
+
         "file"
       end
 
@@ -119,7 +122,7 @@ HELPER
 
       def class_from_path(path)
         underscored = path.split('/').last.split('.rb').first
-        parts       = underscored.split('_')
+        parts = underscored.split('_')
 
         parts.inject("") do |word, part|
           word << part.capitalize
@@ -129,7 +132,11 @@ HELPER
 
       # Extracts the snippet text
       def snippet(snippet_name)
-        snippet_file = File.expand_path(File.dirname(__FILE__) + "/../../../../Snippets/#{snippet_name}")
+        snippet_file = File.expand_path(
+          File.dirname(__FILE__) +
+          "/../../../../Snippets/#{snippet_name}"
+        )
+
         xml = File.open(snippet_file).read
 
         xml.match(/<key>content<\/key>\s*<string>([^<]*)<\/string>/m)[1]
@@ -161,7 +168,7 @@ SPEC
           end
 
           lines[n] = line
-          lines[lines.length-(n+1)] = "#{indent}end"
+          lines[lines.length - (n + 1)] = "#{indent}end"
         end
 
         lines.join("\n") + "\n"

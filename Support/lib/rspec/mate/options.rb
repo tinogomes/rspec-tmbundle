@@ -2,23 +2,7 @@ module RSpec
   module Mate
     module Options
       def options
-        @options ||= begin
-                       options = {}
-                       rspec_tm_opts = File.join(ENV['TM_PROJECT_DIRECTORY'], '.rspec-tm')
-                       if File.exist?(rspec_tm_opts)
-                         raw_options = File.readlines(rspec_tm_opts).join(" ").split(/\s+/)
-                         current_key = nil
-                         raw_options.each do |opt|
-                           if opt =~ /^-/
-                             current_key = opt
-                             options[current_key] = true
-                           else
-                             options[current_key] = transform(opt)
-                           end
-                         end
-                       end
-                       options
-                     end
+        @options ||= load_options
       end
 
       def []=(k,v)
@@ -27,6 +11,27 @@ module RSpec
 
       def [](k)
         options[k]
+      end
+
+      def load_options
+        options = {}
+        rspec_tm_opts = File.join(ENV['TM_PROJECT_DIRECTORY'], '.rspec-tm')
+
+        if File.exist?(rspec_tm_opts)
+          raw_options = File.readlines(rspec_tm_opts).join(" ").split(/\s+/)
+          current_key = nil
+
+          raw_options.each do |opt|
+            if opt =~ /^-/
+              current_key = opt
+              options[current_key] = true
+            else
+              options[current_key] = transform(opt)
+            end
+          end
+        end
+
+        options
       end
 
       def transform(val)
@@ -40,7 +45,7 @@ module RSpec
         end
       end
 
-      module_function :options, :[], :[]=, :transform
+      module_function :load_options, :options, :[], :[]=, :transform
     end
   end
 end

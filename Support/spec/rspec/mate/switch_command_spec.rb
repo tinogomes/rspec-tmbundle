@@ -26,7 +26,7 @@ module RSpec
 
       RSpec::Matchers.define :be_a do |expected|
         match do |actual|
-          SwitchCommand.new.file_type(actual) == expected
+          SwitchCommand.new.content_type_of_twin(actual) == expected
         end
       end
 

@@ -46,7 +46,7 @@ HELPER
       # path contains app/(controllers|helpers|models|views)/(.*?)
       #
       # TODO: rename content_type_of_file
-      def file_type(path)
+      def content_type_of_twin(path)
         # $1 contains the path from '/' to the 'app' directory
         # $2 contains immediate subdirectory to 'app'
         # $3 contains the path relative to spec/$2/
@@ -95,9 +95,9 @@ HELPER
 
           # file_type returns "filename" or "#filename spec" or "spec"
           #
-          # TODO: file_type method renamed determine_twins_content_type
+          # TODO: file_type method renamed twins_content_type
           # TODO: file_type var renamed twins_content_type
-          file_type = file_type(twins_path)
+          file_type = content_type_of_twin(twins_path)
 
           # create? is response to a dialog box, confirming creation of the
           # path_to_other file

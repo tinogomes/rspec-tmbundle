@@ -101,9 +101,9 @@ HELPER
           # path_to_other file
           if create?(relative_path_from_project_dir_to_twin, twins_content_type)
             # TODO: content renamed twins_content
-            content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
+            twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
 
-            write_and_open(twins_path, content)
+            write_and_open(twins_path, twins_content)
           end
         end
       end

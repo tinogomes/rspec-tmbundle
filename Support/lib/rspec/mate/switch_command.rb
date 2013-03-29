@@ -193,14 +193,15 @@ HELPER
       end
 
       def open_twin(twins_path)
-        if File.file?(twins_path)
-          # open 'path_to_other' in textmate
-          #
-          # use backticks to do this
-          %x{ "$TM_SUPPORT_PATH/bin/mate" "#{twins_path}" }
-        else
-          create_twin(twins_path)
-        end
+        create_twin
+
+        `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
+      end
+
+      def create_twin(twins_path)
+        return if File.file?(twins_path)
+
+        create_twin(twins_path)
       end
 
       def create_twin(twins_path)
@@ -211,6 +212,8 @@ HELPER
 
         # create? is response to a dialog box, confirming creation of the
         # twin
+        #
+        # TODO: create? renamed twin_creation_confirmed?
         if create?(relative_path_from_project_dir_to_twin, twins_content_type)
           twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
 
@@ -239,13 +242,23 @@ SPEC
       end
 
       def write_and_open(path, content)
+        # create path to twin and twin file
         `mkdir -p "#{File.dirname(path)}"`
         `touch "#{path}"`
+
+        # open twin in TextMate
         `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
+
+        # activate TextMate
         `osascript &>/dev/null -e 'tell app "SystemUIServer" to activate' -e 'tell app "TextMate" to activate'`
 
         escaped_content = content.gsub("\n","\\n").gsub('$','\\$').gsub('"','\\\\\\\\\\\\"')
 
+        # TODO: don't go through TM for this. Write the content to the file,
+        # then return and used the (not yet created) open_twin_in_textmate
+        # method
+
+        # have TextMate insert content
         `osascript &>/dev/null -e "tell app \\"TextMate\\" to insert \\"#{escaped_content}\\" as snippet true"`
       end
     end

@@ -17,8 +17,8 @@ module RSpec
       end
 
       # public only for testing purposes
-      def content_for(file_type, relative_path)
-        case file_type
+      def content_for(twins_content_type, relative_path)
+        case twins_content_type
           when /spec$/ then
             spec(relative_path)
           when "controller"
@@ -44,8 +44,6 @@ HELPER
       end
 
       # path contains app/(controllers|helpers|models|views)/(.*?)
-      #
-      # TODO: rename content_type_of_file
       def content_type_of_twin(path)
         # $1 contains the path from '/' to the 'app' directory
         # $2 contains immediate subdirectory to 'app'
@@ -97,13 +95,13 @@ HELPER
           #
           # TODO: file_type method renamed twins_content_type
           # TODO: file_type var renamed twins_content_type
-          file_type = content_type_of_twin(twins_path)
+          twins_content_type = content_type_of_twin(twins_path)
 
           # create? is response to a dialog box, confirming creation of the
           # path_to_other file
-          if create?(relative_path_from_project_dir_to_twin, file_type)
+          if create?(relative_path_from_project_dir_to_twin, twins_content_type)
             # TODO: content renamed twins_content
-            content = content_for(file_type, relative_path_from_project_dir_to_twin)
+            content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
 
             write_and_open(twins_path, content)
           end
@@ -213,8 +211,8 @@ HELPER
         # end
       end
 
-      def create?(relative_twin, file_type)
-        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{file_type}?"`
+      def create?(relative_twin, twins_content_type)
+        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{twins_content_type}?"`
 
         answer.to_s.chomp == "1"
       end

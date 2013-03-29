@@ -16,6 +16,7 @@ module RSpec
         end
       end
 
+      # public only for testing purposes
       def content_for(file_type, relative_path)
         case file_type
           when /spec$/ then
@@ -42,7 +43,13 @@ HELPER
         end
       end
 
+      # path contains app/(controllers|helpers|models|views)/(.*?)
       def file_type(path)
+        # $1 contains the path from '/' to the 'app' directory
+        # $2 contains immediate subdirectory to 'app'
+        # $3 contains the path relative to spec/$2/
+
+        # $3[0..-2] is the filename with the extension removed
         if path =~ /^(.*?)\/(spec)\/(controllers|helpers|models|views)\/(.*?)$/
           return "#{$3[0..-2]} spec"
         end
@@ -58,15 +65,38 @@ HELPER
         "file"
       end
 
+      # primary method used
+      #
+      # * project_directory => ENV['TM_PROJECT_DIRECTOR']
+      # * filepath => ENV['TM_FILEPATH']
+      #
+      # TM_PROJECT_DIRECTORY
+      #   the top-level folder in the project drawer (may not be set).
+      #
+      # TM_FILEPATH
+      #   the path (including file name) for the current document
+      #   (may not be set).
       def go_to_twin(project_directory, filepath)
+        # TODO: twin renamed path_to_other
+        #
+        # twin returns the path of the twin
         other = twin(filepath)
 
+        # File.exsits(path_to_other)
         if File.file?(other)
+          # open 'path_to_other' in textmate
+          #
+          # use backticks to do this
           %x{ "$TM_SUPPORT_PATH/bin/mate" "#{other}" }
         else
+          # what is this doing?
           relative  = other[project_directory.length+1..-1]
+
+          # file_type returns "filename" or "#filename spec" or "spec"
           file_type = file_type(other)
 
+          # create? is response to a dialog box, confirming creation of the
+          # path_to_other file
           if create?(relative, file_type)
             content = content_for(file_type, relative)
             write_and_open(other, content)
@@ -74,6 +104,7 @@ HELPER
         end
       end
 
+      # TODO: provide an intention revealing name path_to_class_content
       def klass(relative_path, content=nil)
         parts     = relative_path.split('/')
         lib_index = parts.index('lib') || 0

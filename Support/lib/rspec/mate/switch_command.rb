@@ -84,24 +84,24 @@ HELPER
         #
         # TODO: twin renamed path_to_twin or some such
         # TODO: other renamed others_path (or: twins_path)
-        other = path_to_twin(filepath)
+        twins_path = path_to_twin(filepath)
 
         # File.exsits(path_to_other)
         # TODO: extract open_or_create_and_open_twin
-        if File.file?(other)
+        if File.file?(twins_path)
           # open 'path_to_other' in textmate
           #
           # use backticks to do this
-          %x{ "$TM_SUPPORT_PATH/bin/mate" "#{other}" }
+          %x{ "$TM_SUPPORT_PATH/bin/mate" "#{twins_path}" }
         else
           # TODO: rename relative_path_from_project_dir_to_twin
-          relative  = other[project_directory.length + 1..-1]
+          relative  = twins_path[project_directory.length + 1..-1]
 
           # file_type returns "filename" or "#filename spec" or "spec"
           #
           # TODO: file_type method renamed determine_twins_content_type
           # TODO: file_type var renamed twins_content_type
-          file_type = file_type(other)
+          file_type = file_type(twins_path)
 
           # create? is response to a dialog box, confirming creation of the
           # path_to_other file
@@ -109,7 +109,7 @@ HELPER
             # TODO: content renamed twins_content
             content = content_for(file_type, relative)
 
-            write_and_open(other, content)
+            write_and_open(twins_path, content)
           end
         end
       end

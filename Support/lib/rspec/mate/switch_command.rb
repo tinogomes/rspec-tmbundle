@@ -1,7 +1,6 @@
 module RSpec
   module Mate
-    # This is based on Ruy Asan's initial code:
-    # http://ruy.ca/posts/6-A-simple-switch-between-source-and-spec-file-command-for-textmate-with-auto-creation-
+    # Based on Ruy Asan's initial code.
     class SwitchCommand
       def go_to_twin(project_directory, filepath)
         other = twin(filepath)

@@ -80,10 +80,6 @@ HELPER
       #
       # TODO: rename open_twin
       def go_to_twin(project_directory, filepath)
-        # twin returns the path of the twin
-        #
-        # TODO: twin renamed path_to_twin or some such
-        # TODO: other renamed others_path (or: twins_path)
         twins_path = path_to_twin(filepath)
 
         # File.exsits(path_to_other)
@@ -95,7 +91,7 @@ HELPER
           %x{ "$TM_SUPPORT_PATH/bin/mate" "#{twins_path}" }
         else
           # TODO: rename relative_path_from_project_dir_to_twin
-          relative  = twins_path[project_directory.length + 1..-1]
+          relative_path_from_project_dir_to_twin  = twins_path[project_directory.length + 1..-1]
 
           # file_type returns "filename" or "#filename spec" or "spec"
           #
@@ -105,9 +101,9 @@ HELPER
 
           # create? is response to a dialog box, confirming creation of the
           # path_to_other file
-          if create?(relative, file_type)
+          if create?(relative_path_from_project_dir_to_twin, file_type)
             # TODO: content renamed twins_content
-            content = content_for(file_type, relative)
+            content = content_for(file_type, relative_path_from_project_dir_to_twin)
 
             write_and_open(twins_path, content)
           end

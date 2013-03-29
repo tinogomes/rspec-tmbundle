@@ -2,6 +2,62 @@ module RSpec
   module Mate
     # Based on Ruy Asan's initial code.
     class SwitchCommand
+      module Framework
+        def merb?
+          File.exist?(File.join(self, 'config', 'init.rb'))
+        end
+
+        def merb_or_rails?
+          merb? || rails?
+        end
+
+        def rails?
+          File.exist?(File.join(self, 'config', 'boot.rb'))
+        end
+      end
+
+      def content_for(file_type, relative_path)
+        case file_type
+          when /spec$/ then
+            spec(relative_path)
+          when "controller"
+            <<-CONTROLLER
+class #{class_from_path(relative_path)} < ApplicationController
+end
+CONTROLLER
+          when "model"
+            <<-MODEL
+class #{class_from_path(relative_path)} < ActiveRecord::Base
+end
+MODEL
+          when "helper"
+            <<-HELPER
+module #{class_from_path(relative_path)}
+end
+HELPER
+          when "view"
+            ""
+          else
+            klass(relative_path)
+        end
+      end
+
+      def file_type(path)
+        if path =~ /^(.*?)\/(spec)\/(controllers|helpers|models|views)\/(.*?)$/
+          return "#{$3[0..-2]} spec"
+        end
+
+        if path =~ /^(.*?)\/(app)\/(controllers|helpers|models|views)\/(.*?)$/
+          return $3[0..-2]
+        end
+
+        if path =~ /_spec\.rb$/
+          return "spec"
+        end
+
+        "file"
+      end
+
       def go_to_twin(project_directory, filepath)
         other = twin(filepath)
 
@@ -18,18 +74,28 @@ module RSpec
         end
       end
 
-      module Framework
-        def merb?
-          File.exist?(File.join(self, 'config', 'init.rb'))
+      def klass(relative_path, content=nil)
+        parts     = relative_path.split('/')
+        lib_index = parts.index('lib') || 0
+        parts     = parts[lib_index+1..-1]
+        lines     = Array.new(parts.length*2)
+
+        parts.each_with_index do |part, n|
+          part   = part.capitalize
+          indent = "  " * n
+
+          line = if part =~ /(.*)\.rb/
+            part = $1
+            "#{indent}class #{part}"
+          else
+            "#{indent}module #{part}"
+          end
+
+          lines[n] = line
+          lines[lines.length - (n + 1)] = "#{indent}end"
         end
 
-        def merb_or_rails?
-          merb? || rails?
-        end
-
-        def rails?
-          File.exist?(File.join(self, 'config', 'boot.rb'))
-        end
+        lines.join("\n") + "\n"
       end
 
       def twin(path)
@@ -72,52 +138,8 @@ module RSpec
         end
       end
 
-      def file_type(path)
-        if path =~ /^(.*?)\/(spec)\/(controllers|helpers|models|views)\/(.*?)$/
-          return "#{$3[0..-2]} spec"
-        end
 
-        if path =~ /^(.*?)\/(app)\/(controllers|helpers|models|views)\/(.*?)$/
-          return $3[0..-2]
-        end
-
-        if path =~ /_spec\.rb$/
-          return "spec"
-        end
-
-        "file"
-      end
-
-      def create?(relative_twin, file_type)
-        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{file_type}?"`
-        answer.to_s.chomp == "1"
-      end
-
-      def content_for(file_type, relative_path)
-        case file_type
-          when /spec$/ then
-            spec(relative_path)
-          when "controller"
-            <<-CONTROLLER
-class #{class_from_path(relative_path)} < ApplicationController
-end
-CONTROLLER
-          when "model"
-            <<-MODEL
-class #{class_from_path(relative_path)} < ActiveRecord::Base
-end
-MODEL
-          when "helper"
-            <<-HELPER
-module #{class_from_path(relative_path)}
-end
-HELPER
-          when "view"
-            ""
-          else
-            klass(relative_path)
-        end
-      end
+    private
 
       def class_from_path(path)
         underscored = path.split('/').last.split('.rb').first
@@ -127,6 +149,11 @@ HELPER
           word << part.capitalize
           word
         end
+      end
+
+      def create?(relative_twin, file_type)
+        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{file_type}?"`
+        answer.to_s.chomp == "1"
       end
 
       # Extracts the snippet text
@@ -147,30 +174,6 @@ require 'spec_helper'
 
 #{snippet("Describe_type.tmSnippet")}
 SPEC
-      end
-
-      def klass(relative_path, content=nil)
-        parts     = relative_path.split('/')
-        lib_index = parts.index('lib') || 0
-        parts     = parts[lib_index+1..-1]
-        lines     = Array.new(parts.length*2)
-
-        parts.each_with_index do |part, n|
-          part   = part.capitalize
-          indent = "  " * n
-
-          line = if part =~ /(.*)\.rb/
-            part = $1
-            "#{indent}class #{part}"
-          else
-            "#{indent}module #{part}"
-          end
-
-          lines[n] = line
-          lines[lines.length - (n + 1)] = "#{indent}end"
-        end
-
-        lines.join("\n") + "\n"
       end
 
       def write_and_open(path, content)

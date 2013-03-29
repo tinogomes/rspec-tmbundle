@@ -22,17 +22,17 @@ module RSpec
             spec(relative_path)
           when "controller"
             <<-CONTROLLER
-class #{class_from_path(relative_path)} < ApplicationController
+class #{class_name_from_path(relative_path)} < ApplicationController
 end
 CONTROLLER
           when "model"
             <<-MODEL
-class #{class_from_path(relative_path)} < ActiveRecord::Base
+class #{class_name_from_path(relative_path)} < ActiveRecord::Base
 end
 MODEL
           when "helper"
             <<-HELPER
-module #{class_from_path(relative_path)}
+module #{class_name_from_path(relative_path)}
 end
 HELPER
           when "view"
@@ -141,7 +141,7 @@ HELPER
 
     private
 
-      def class_from_path(path)
+      def class_name_from_path(path)
         underscored = path.split('/').last.split('.rb').first
         parts = underscored.split('_')
 

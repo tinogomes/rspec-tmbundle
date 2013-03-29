@@ -44,6 +44,8 @@ HELPER
       end
 
       # path contains app/(controllers|helpers|models|views)/(.*?)
+      #
+      # TODO: rename content_type_of_file
       def file_type(path)
         # $1 contains the path from '/' to the 'app' directory
         # $2 contains immediate subdirectory to 'app'
@@ -68,37 +70,45 @@ HELPER
       # primary method used
       #
       # * project_directory => ENV['TM_PROJECT_DIRECTOR']
-      # * filepath => ENV['TM_FILEPATH']
+      # * filepath          => ENV['TM_FILEPATH']
       #
-      # TM_PROJECT_DIRECTORY
-      #   the top-level folder in the project drawer (may not be set).
+      # TM_PROJECT_DIRECTORY (may not be set)
+      #   the top-level folder in the project drawer
       #
-      # TM_FILEPATH
-      #   the path (including file name) for the current document
-      #   (may not be set).
+      # TM_FILEPATH (may not be set)
+      #   the current document's path (including file name)
+      #
+      # TODO: rename open_twin
       def go_to_twin(project_directory, filepath)
-        # TODO: twin renamed path_to_other
-        #
         # twin returns the path of the twin
-        other = twin(filepath)
+        #
+        # TODO: twin renamed path_to_twin or some such
+        # TODO: other renamed others_path (or: twins_path)
+        other = path_to_twin(filepath)
 
         # File.exsits(path_to_other)
+        # TODO: extract open_or_create_and_open_twin
         if File.file?(other)
           # open 'path_to_other' in textmate
           #
           # use backticks to do this
           %x{ "$TM_SUPPORT_PATH/bin/mate" "#{other}" }
         else
-          # what is this doing?
-          relative  = other[project_directory.length+1..-1]
+          # TODO: rename relative_path_from_project_dir_to_twin
+          relative  = other[project_directory.length + 1..-1]
 
           # file_type returns "filename" or "#filename spec" or "spec"
+          #
+          # TODO: file_type method renamed determine_twins_content_type
+          # TODO: file_type var renamed twins_content_type
           file_type = file_type(other)
 
           # create? is response to a dialog box, confirming creation of the
           # path_to_other file
           if create?(relative, file_type)
+            # TODO: content renamed twins_content
             content = content_for(file_type, relative)
+
             write_and_open(other, content)
           end
         end
@@ -129,7 +139,11 @@ HELPER
         lines.join("\n") + "\n"
       end
 
-      def twin(path)
+      # returns the path of the twin
+      def path_to_twin(path)
+        # $1 (framework) is the path up to lib, app or spec
+        # $2 (parent) lib, app or spec
+        # $3 (rest) is the rest of the path
         if path =~ /^(.*?)\/(lib|app|spec)\/(.*?)$/
           framework, parent, rest = $1, $2, $3
           framework.extend Framework
@@ -137,12 +151,19 @@ HELPER
           case parent
             when 'lib', 'app' then
               if framework.merb_or_rails?
+                # /app/ => /spec/
                 path = path.gsub(/\/app\//, "/spec/")
+
+                # /lib/ => /spec/lib/
                 path = path.gsub(/\/lib\//, "/spec/lib/")
               else
+                # /lib/ => /spec/
                 path = path.gsub(/\/lib\//, "/spec/")
               end
 
+              # suffix map
+              # extensions = [.rb, .erb, .haml, .slim, .rhtml, .rjs]
+              # extension => "#{extension}_spec.rb"
               path = path.gsub(/\.rb$/, "_spec.rb")
               path = path.gsub(/\.erb$/, ".erb_spec.rb")
               path = path.gsub(/\.haml$/, ".haml_spec.rb")
@@ -150,6 +171,9 @@ HELPER
               path = path.gsub(/\.rhtml$/, ".rhtml_spec.rb")
               path = path.gsub(/\.rjs$/, ".rjs_spec.rb")
             when 'spec' then
+              # suffix map
+              # extensions = [.rb, .erb, .haml, .slim, .rhtml, .rjs]
+              # "#{extension}_spec.rb" => extension
               path = path.gsub(/\.rjs_spec\.rb$/, ".rjs")
               path = path.gsub(/\.rhtml_spec\.rb$/, ".rhtml")
               path = path.gsub(/\.erb_spec\.rb$/, ".erb")
@@ -158,9 +182,13 @@ HELPER
               path = path.gsub(/_spec\.rb$/, ".rb")
 
               if framework.merb_or_rails?
+                # /spec/lib/ => /lib/
                 path = path.gsub(/\/spec\/lib\//, "/lib/")
+
+                # /spec/ => /app/
                 path = path.gsub(/\/spec\//, "/app/")
               else
+                # /spec/ => /lib/
                 path = path.gsub(/\/spec\//, "/lib/")
               end
           end
@@ -174,16 +202,24 @@ HELPER
 
       def class_name_from_path(path)
         underscored = path.split('/').last.split('.rb').first
-        parts = underscored.split('_')
+        parts       = underscored.split('_')
+
+        # words = File.basename(path_to_file, '.rb').split('_')
 
         parts.inject("") do |word, part|
           word << part.capitalize
           word
         end
+
+        # words.inject("") do |class_name, word|
+        #   class_name << word.capitalize
+        #   class_name
+        # end
       end
 
       def create?(relative_twin, file_type)
         answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{file_type}?"`
+
         answer.to_s.chomp == "1"
       end
 

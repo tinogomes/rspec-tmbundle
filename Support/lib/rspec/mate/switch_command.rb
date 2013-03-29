@@ -80,32 +80,7 @@ HELPER
       def go_to_twin(project_directory, filepath)
         twins_path = path_to_twin(filepath)
 
-        # File.exsits(path_to_other)
-        # TODO: extract open_or_create_and_open_twin
-        if File.file?(twins_path)
-          # open 'path_to_other' in textmate
-          #
-          # use backticks to do this
-          %x{ "$TM_SUPPORT_PATH/bin/mate" "#{twins_path}" }
-        else
-          # TODO: rename relative_path_from_project_dir_to_twin
-          relative_path_from_project_dir_to_twin  = twins_path[project_directory.length + 1..-1]
-
-          # file_type returns "filename" or "#filename spec" or "spec"
-          #
-          # TODO: file_type method renamed twins_content_type
-          # TODO: file_type var renamed twins_content_type
-          twins_content_type = content_type_of_twin(twins_path)
-
-          # create? is response to a dialog box, confirming creation of the
-          # path_to_other file
-          if create?(relative_path_from_project_dir_to_twin, twins_content_type)
-            # TODO: content renamed twins_content
-            twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
-
-            write_and_open(twins_path, twins_content)
-          end
-        end
+        open_twin(twins_path)
       end
 
       # TODO: provide an intention revealing name path_to_class_content
@@ -215,6 +190,28 @@ HELPER
         answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{twins_content_type}?"`
 
         answer.to_s.chomp == "1"
+      end
+
+      def open_twin(twins_path)
+        if File.file?(twins_path)
+          # open 'path_to_other' in textmate
+          #
+          # use backticks to do this
+          %x{ "$TM_SUPPORT_PATH/bin/mate" "#{twins_path}" }
+        else
+          relative_path_from_project_dir_to_twin  = twins_path[project_directory.length + 1..-1]
+
+          # returns one of: "filename" or "#filename spec" or "spec"
+          twins_content_type = content_type_of_twin(twins_path)
+
+          # create? is response to a dialog box, confirming creation of the
+          # twin
+          if create?(relative_path_from_project_dir_to_twin, twins_content_type)
+            twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
+
+            write_and_open(twins_path, twins_content)
+          end
+        end
       end
 
       # Extracts the snippet text

@@ -198,18 +198,23 @@ HELPER
         `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
       end
 
+      def path_from_project_dir_to_twin(twins_path)
+        twins_path[ENV['TM_PROJECT_DIRECTORY'].length + 1..-1]
+      end
+
       def create_twin(twins_path)
         return if File.file?(twins_path)
 
-        relative_path_from_project_dir_to_twin  = twins_path[project_directory.length + 1..-1]
+        relative_path = path_from_project_dir_to_twin(twins_path)
+
 
         # returns one of: "filename" or "#filename spec" or "spec"
         twins_content_type = content_type_of_twin(twins_path)
 
         # twin_creation_confirmed? is response to a dialog box, confirming
         # creation of the twin
-        if twin_creation_confirmed?(relative_path_from_project_dir_to_twin, twins_content_type)
-          twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
+        if twin_creation_confirmed?(relative_path, twins_content_type)
+          twins_content = content_for(twins_content_type, relative_path)
 
           write_and_open(twins_path, twins_content)
         end

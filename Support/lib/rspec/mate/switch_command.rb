@@ -44,7 +44,7 @@ HELPER
       end
 
       # path contains app/(controllers|helpers|models|views)/(.*?)
-      def content_type_of_twin(path)
+      def content_type_of_other(path)
         # $1 contains the path from '/' to the 'app' directory
         # $2 contains immediate subdirectory to 'app'
         # $3 contains the path relative to spec/$2/
@@ -76,12 +76,12 @@ HELPER
       # TM_FILEPATH (may not be set)
       #   the current document's path (including file name)
       #
-      # TODO: rename open_twin
+      # TODO: rename open_other
       # TODO: remove the project_directory param
       def go_to_twin(project_directory, filepath)
-        path_to_twin = path_to_twin(filepath)
+        path_to_other = path_to_other(filepath)
 
-        open_twin(path_to_twin)
+        open_other(path_to_other)
       end
 
       # TODO: provide an intention revealing name path_to_class_content
@@ -109,7 +109,7 @@ HELPER
         lines.join("\n") + "\n"
       end
 
-      def path_to_twin(path)
+      def path_to_other(path)
         # $1 (framework) is the path up to lib, app or spec
         # $2 (parent) lib, app or spec
         # $3 (rest) is the rest of the path
@@ -186,40 +186,40 @@ HELPER
         # end
       end
 
-      def twin_creation_confirmed?(relative_path, content_type)
+      def other_creation_confirmed?(relative_path, content_type)
         confirmation = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_path}" --text "Create missing #{content_type}?"`
 
         confirmation.to_s.chomp == "1"
       end
 
-      def create_twin(path_to_twin)
-        return if File.file?(path_to_twin)
+      def create_other(path_to_other)
+        return if File.file?(path_to_other)
 
         # returns one of: "filename" or "#filename spec" or "spec"
-        content_type  = content_type_of_twin(path_to_twin)
-        relative_path = path_from_project_dir_to_twin(path_to_twin)
+        content_type  = content_type_of_other(path_to_other)
+        relative_path = path_from_project_dir_to_other(path_to_other)
 
-        # twin_creation_confirmed? is response to a dialog box, confirming
-        # creation of the twin
-        if twin_creation_confirmed?(relative_path, content_type)
+        # other_creation_confirmed? is response to a dialog box, confirming
+        # creation of the other
+        if other_creation_confirmed?(relative_path, content_type)
           content = content_for(relative_path, content_type)
 
-          write_and_open(path_to_twin, content)
+          write_and_open(path_to_other, content)
         end
       end
 
-      def open_twin(path)
-        create_twin
+      def open_other(path)
+        create_other
 
-        open_twin_in_textmate(path)
+        open_other_in_textmate(path)
       end
 
-      def open_twin_in_textmate(path)
+      def open_other_in_textmate(path)
         `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
       end
 
-      def path_from_project_dir_to_twin(path_to_twin)
-        path_to_twin[ENV['TM_PROJECT_DIRECTORY'].length + 1..-1]
+      def path_from_project_dir_to_other(path_to_other)
+        path_to_other[ENV['TM_PROJECT_DIRECTORY'].length + 1..-1]
       end
 
       # Extracts the snippet text
@@ -243,11 +243,11 @@ SPEC
       end
 
       def write_and_open(path, content)
-        # create path to twin and twin file
+        # create path to other and other file
         `mkdir -p "#{File.dirname(path)}"`
         `touch "#{path}"`
 
-        open_twin_in_textmate(path)
+        open_other_in_textmate(path)
 
         # activate TextMate
         `osascript &>/dev/null -e 'tell app "SystemUIServer" to activate' -e 'tell app "TextMate" to activate'`
@@ -255,7 +255,7 @@ SPEC
         escaped_content = content.gsub("\n","\\n").gsub('$','\\$').gsub('"','\\\\\\\\\\\\"')
 
         # TODO: don't go through TM for this. Write the content to the file,
-        # then return and used the (not yet created) open_twin_in_textmate
+        # then return and used the (not yet created) open_other_in_textmate
         # method
 
         # have TextMate insert content

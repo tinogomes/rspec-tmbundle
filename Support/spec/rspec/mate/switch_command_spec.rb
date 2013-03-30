@@ -4,14 +4,14 @@ module RSpec
   module Mate
     describe SwitchCommand do
       class << self
-        def expect_twins(pair)
+        def expect_others(pair)
           specify do
-            pair[0].should twin(pair[1])
+            pair[0].should other(pair[1])
           end
         end
       end
 
-      RSpec::Matchers.define :twin do |*args|
+      RSpec::Matchers.define :other do |*args|
         expected = args.shift
         opts     = args.last || {:webapp => false}
 
@@ -19,19 +19,19 @@ module RSpec
 
         match do |actual|
           command = SwitchCommand.new
-          command.path_to_twin(actual) == expected &&
-            command.path_to_twin(expected) == actual
+          command.path_to_other(actual) == expected &&
+            command.path_to_other(expected) == actual
         end
       end
 
       RSpec::Matchers.define :be_a do |expected|
         match do |actual|
-          SwitchCommand.new.content_type_of_twin(actual) == expected
+          SwitchCommand.new.content_type_of_other(actual) == expected
         end
       end
 
       describe "in a regular app" do
-        expect_twins [
+        expect_others [
           "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/spec/rspec/mate/switch_command_spec.rb",
           "/Users/aslakhellesoy/scm/rspec/trunk/RSpec.tmbundle/Support/lib/rspec/mate/switch_command.rb"
         ]
@@ -59,7 +59,7 @@ SPEC
 
           SwitchCommand.new.content_for(
             "spec/controller/zap_spec.rb",
-            'spec'            
+            'spec'
           ).should == regular_spec
         end
 
@@ -77,92 +77,92 @@ EOF
 
           SwitchCommand.new.content_for(
             "some/other/path/lib/foo/zap.rb",
-            'file'            
+            'file'
           ).should == file
         end
       end
 
       describe "in a Rails or Merb app" do
-        def twin(expected)
+        def other(expected)
           super(expected, :webapp => true)
         end
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/controllers/mooky_controller.rb",
           "/a/full/path/spec/controllers/mooky_controller_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/controllers/application_controller.rb",
           "/a/full/path/spec/controllers/application_controller_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/spec/controllers/application_controller_spec.rb",
           "/a/full/path/app/controllers/application_controller.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/controllers/job_applications_controller.rb",
           "/a/full/path/spec/controllers/job_applications_controller_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/spec/controllers/job_applications_controller_spec.rb",
           "/a/full/path/app/controllers/job_applications_controller.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/helpers/application_helper.rb",
           "/a/full/path/spec/helpers/application_helper_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/spec/helpers/application_helper_spec.rb",
           "/a/full/path/app/helpers/application_helper.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/models/mooky.rb",
           "/a/full/path/spec/models/mooky_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/helpers/mooky_helper.rb",
           "/a/full/path/spec/helpers/mooky_helper_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.html.erb",
           "/a/full/path/spec/views/mooky/show.html.erb_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.html.haml",
           "/a/full/path/spec/views/mooky/show.html.haml_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.html.slim",
           "/a/full/path/spec/views/mooky/show.html.slim_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.rhtml",
           "/a/full/path/spec/views/mooky/show.rhtml_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.js.rjs",
           "/a/full/path/spec/views/mooky/show.js.rjs_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/app/views/mooky/show.rjs",
           "/a/full/path/spec/views/mooky/show.rjs_spec.rb"
         ]
 
-        expect_twins [
+        expect_others [
           "/a/full/path/lib/foo/mooky.rb",
           "/a/full/path/spec/lib/foo/mooky_spec.rb"
         ]
@@ -218,11 +218,11 @@ EOF
         it "create a spec that requires a helper" do
           SwitchCommand.new.content_for(
             "spec/controllers/mooky_controller_spec.rb",
-            'controller spec'            
+            'controller spec'
           ).split("\n")[0].should == "require 'spec_helper'"
         end
 
-        it "creates a controller if twinned from a controller spec" do
+        it "creates a controller if othered from a controller spec" do
           SwitchCommand.new.content_for(
             "spec/controllers/mooky_controller.rb",
             'controller'
@@ -232,17 +232,17 @@ end
 EXPECTED
         end
 
-        it "creates a model if twinned from a model spec" do
+        it "creates a model if othered from a model spec" do
           SwitchCommand.new.content_for(
             "spec/models/mooky.rb",
-            'model'            
+            'model'
           ).should == <<-EXPECTED
 class Mooky < ActiveRecord::Base
 end
 EXPECTED
         end
 
-        it "creates a helper if twinned from a helper spec" do
+        it "creates a helper if othered from a helper spec" do
           SwitchCommand.new.content_for(
             "spec/helpers/mooky_helper.rb",
             'helper'
@@ -252,7 +252,7 @@ end
 EXPECTED
         end
 
-        it "creates an empty view if twinned from a view spec" do
+        it "creates an empty view if othered from a view spec" do
           SwitchCommand.new.content_for(
             "spec/views/mookies/index.html.erb_spec.rb",
             'view'

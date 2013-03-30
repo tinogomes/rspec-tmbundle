@@ -17,7 +17,7 @@ module RSpec
       end
 
       # public only for testing purposes
-      def content_for(content_type, relative_path)
+      def content_for(relative_path, content_type)
         case content_type
           when /spec$/ then
             spec(relative_path)
@@ -204,7 +204,7 @@ HELPER
 
       def create_twin(twins_path)
         return if File.file?(twins_path)
-        
+
         # returns one of: "filename" or "#filename spec" or "spec"
         content_type  = content_type_of_twin(twins_path)
         relative_path = path_from_project_dir_to_twin(twins_path)
@@ -212,7 +212,7 @@ HELPER
         # twin_creation_confirmed? is response to a dialog box, confirming
         # creation of the twin
         if twin_creation_confirmed?(relative_path, content_type)
-          twins_content = content_for(content_type, relative_path)
+          twins_content = content_for(relative_path, content_type)
 
           write_and_open(twins_path, twins_content)
         end

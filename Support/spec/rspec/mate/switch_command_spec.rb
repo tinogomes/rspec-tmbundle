@@ -53,11 +53,13 @@ describe ${1:Type} do
 end
 SPEC
           SwitchCommand.new.content_for(
-            'spec', "spec/foo/zap_spec.rb"
+            "spec/foo/zap_spec.rb",
+            'spec'
           ).should == regular_spec
 
           SwitchCommand.new.content_for(
-            'spec', "spec/controller/zap_spec.rb"
+            "spec/controller/zap_spec.rb",
+            'spec'            
           ).should == regular_spec
         end
 
@@ -69,11 +71,13 @@ module Foo
 end
 EOF
           SwitchCommand.new.content_for(
-            'file', "lib/foo/zap.rb"
+            "lib/foo/zap.rb",
+            'file'
           ).should == file
 
           SwitchCommand.new.content_for(
-            'file', "some/other/path/lib/foo/zap.rb"
+            "some/other/path/lib/foo/zap.rb",
+            'file'            
           ).should == file
         end
       end
@@ -213,13 +217,15 @@ EOF
 
         it "create a spec that requires a helper" do
           SwitchCommand.new.content_for(
-            'controller spec', "spec/controllers/mooky_controller_spec.rb"
+            "spec/controllers/mooky_controller_spec.rb",
+            'controller spec'            
           ).split("\n")[0].should == "require 'spec_helper'"
         end
 
         it "creates a controller if twinned from a controller spec" do
           SwitchCommand.new.content_for(
-            'controller', "spec/controllers/mooky_controller.rb"
+            "spec/controllers/mooky_controller.rb",
+            'controller'
           ).should == <<-EXPECTED
 class MookyController < ApplicationController
 end
@@ -228,7 +234,8 @@ EXPECTED
 
         it "creates a model if twinned from a model spec" do
           SwitchCommand.new.content_for(
-            'model', "spec/models/mooky.rb"
+            "spec/models/mooky.rb",
+            'model'            
           ).should == <<-EXPECTED
 class Mooky < ActiveRecord::Base
 end
@@ -237,7 +244,8 @@ EXPECTED
 
         it "creates a helper if twinned from a helper spec" do
           SwitchCommand.new.content_for(
-            'helper', "spec/helpers/mooky_helper.rb"
+            "spec/helpers/mooky_helper.rb",
+            'helper'
           ).should == <<-EXPECTED
 module MookyHelper
 end
@@ -246,7 +254,8 @@ EXPECTED
 
         it "creates an empty view if twinned from a view spec" do
           SwitchCommand.new.content_for(
-            'view', "spec/views/mookies/index.html.erb_spec.rb"
+            "spec/views/mookies/index.html.erb_spec.rb",
+            'view'
           ).should == ""
         end
       end

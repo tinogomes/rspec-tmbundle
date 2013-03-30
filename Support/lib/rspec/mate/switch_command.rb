@@ -204,7 +204,7 @@ HELPER
         if other_creation_confirmed?(relative_path, content_type)
           content = content_for(relative_path, content_type)
 
-          write_and_open(path_to_other, content)
+          write_other(path_to_other, content)
         end
       end
 
@@ -242,24 +242,12 @@ require 'spec_helper'
 SPEC
       end
 
-      def write_and_open(path, content)
-        # create path to other and other file
+      def write_other(path, content)
         `mkdir -p "#{File.dirname(path)}"`
-        `touch "#{path}"`
-
-        open_other_in_textmate(path)
-
-        # activate TextMate
-        `osascript &>/dev/null -e 'tell app "SystemUIServer" to activate' -e 'tell app "TextMate" to activate'`
 
         escaped_content = content.gsub("\n","\\n").gsub('$','\\$').gsub('"','\\\\\\\\\\\\"')
 
-        # TODO: don't go through TM for this. Write the content to the file,
-        # then return and used the (not yet created) open_other_in_textmate
-        # method
-
-        # have TextMate insert content
-        `osascript &>/dev/null -e "tell app \\"TextMate\\" to insert \\"#{escaped_content}\\" as snippet true"`
+        File.open(path, 'w') { |f| f.write(escaped_content) }
       end
     end
   end

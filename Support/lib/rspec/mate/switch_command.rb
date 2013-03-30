@@ -65,7 +65,7 @@ HELPER
         "file"
       end
 
-      # primary method used
+      # This is the primary method used
       #
       # * project_directory => ENV['TM_PROJECT_DIRECTOR']
       # * filepath          => ENV['TM_FILEPATH']
@@ -77,17 +77,18 @@ HELPER
       #   the current document's path (including file name)
       #
       # TODO: rename open_twin
+      # TODO: remove the project_directory param
       def go_to_twin(project_directory, filepath)
-        twins_path = path_to_twin(filepath)
+        path_to_twin = path_to_twin(filepath)
 
-        open_twin(twins_path)
+        open_twin(path_to_twin)
       end
 
       # TODO: provide an intention revealing name path_to_class_content
       def klass(relative_path, content=nil)
         parts     = relative_path.split('/')
         lib_index = parts.index('lib') || 0
-        parts     = parts[lib_index+1..-1]
+        parts     = parts[lib_index + 1..-1]
         lines     = Array.new(parts.length*2)
 
         parts.each_with_index do |part, n|
@@ -108,7 +109,6 @@ HELPER
         lines.join("\n") + "\n"
       end
 
-      # returns the path of the twin
       def path_to_twin(path)
         # $1 (framework) is the path up to lib, app or spec
         # $2 (parent) lib, app or spec
@@ -187,35 +187,39 @@ HELPER
       end
 
       def twin_creation_confirmed?(relative_twin, content_type)
-        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{content_type}?"`
+        confirmation = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{content_type}?"`
 
-        answer.to_s.chomp == "1"
+        confirmation.to_s.chomp == "1"
       end
 
-      def open_twin(twins_path)
-        create_twin
-
-        `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
-      end
-
-      def path_from_project_dir_to_twin(twins_path)
-        twins_path[ENV['TM_PROJECT_DIRECTORY'].length + 1..-1]
-      end
-
-      def create_twin(twins_path)
-        return if File.file?(twins_path)
+      def create_twin(path_to_twin)
+        return if File.file?(path_to_twin)
 
         # returns one of: "filename" or "#filename spec" or "spec"
-        content_type  = content_type_of_twin(twins_path)
-        relative_path = path_from_project_dir_to_twin(twins_path)
+        content_type  = content_type_of_twin(path_to_twin)
+        relative_path = path_from_project_dir_to_twin(path_to_twin)
 
         # twin_creation_confirmed? is response to a dialog box, confirming
         # creation of the twin
         if twin_creation_confirmed?(relative_path, content_type)
           content = content_for(relative_path, content_type)
 
-          write_and_open(twins_path, content)
+          write_and_open(path_to_twin, content)
         end
+      end
+
+      def open_twin(path)
+        create_twin
+
+        open_twin_in_textmate(path)
+      end
+
+      def open_twin_in_textmate(path)
+        `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
+      end
+
+      def path_from_project_dir_to_twin(path_to_twin)
+        path_to_twin[ENV['TM_PROJECT_DIRECTORY'].length + 1..-1]
       end
 
       # Extracts the snippet text
@@ -243,8 +247,7 @@ SPEC
         `mkdir -p "#{File.dirname(path)}"`
         `touch "#{path}"`
 
-        # open twin in TextMate
-        `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
+        open_twin_in_textmate(path)
 
         # activate TextMate
         `osascript &>/dev/null -e 'tell app "SystemUIServer" to activate' -e 'tell app "TextMate" to activate'`

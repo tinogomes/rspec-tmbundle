@@ -186,8 +186,8 @@ HELPER
         # end
       end
 
-      def twin_creation_confirmed?(relative_twin, content_type)
-        confirmation = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{content_type}?"`
+      def twin_creation_confirmed?(relative_path, content_type)
+        confirmation = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_path}" --text "Create missing #{content_type}?"`
 
         confirmation.to_s.chomp == "1"
       end

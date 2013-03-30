@@ -212,9 +212,9 @@ HELPER
         # twin_creation_confirmed? is response to a dialog box, confirming
         # creation of the twin
         if twin_creation_confirmed?(relative_path, content_type)
-          twins_content = content_for(relative_path, content_type)
+          content = content_for(relative_path, content_type)
 
-          write_and_open(twins_path, twins_content)
+          write_and_open(twins_path, content)
         end
       end
 

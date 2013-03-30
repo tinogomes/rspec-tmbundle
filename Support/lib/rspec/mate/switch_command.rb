@@ -186,7 +186,7 @@ HELPER
         # end
       end
 
-      def create?(relative_twin, twins_content_type)
+      def twin_creation_confirmed?(relative_twin, twins_content_type)
         answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{twins_content_type}?"`
 
         answer.to_s.chomp == "1"
@@ -210,11 +210,9 @@ HELPER
         # returns one of: "filename" or "#filename spec" or "spec"
         twins_content_type = content_type_of_twin(twins_path)
 
-        # create? is response to a dialog box, confirming creation of the
-        # twin
-        #
-        # TODO: create? renamed twin_creation_confirmed?
-        if create?(relative_path_from_project_dir_to_twin, twins_content_type)
+        # twin_creation_confirmed? is response to a dialog box, confirming
+        # creation of the twin
+        if twin_creation_confirmed?(relative_path_from_project_dir_to_twin, twins_content_type)
           twins_content = content_for(twins_content_type, relative_path_from_project_dir_to_twin)
 
           write_and_open(twins_path, twins_content)

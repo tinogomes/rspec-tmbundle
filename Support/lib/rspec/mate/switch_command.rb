@@ -201,10 +201,6 @@ HELPER
       def create_twin(twins_path)
         return if File.file?(twins_path)
 
-        create_twin(twins_path)
-      end
-
-      def create_twin(twins_path)
         relative_path_from_project_dir_to_twin  = twins_path[project_directory.length + 1..-1]
 
         # returns one of: "filename" or "#filename spec" or "spec"

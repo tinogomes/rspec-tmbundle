@@ -17,8 +17,8 @@ module RSpec
       end
 
       # public only for testing purposes
-      def content_for(twins_content_type, relative_path)
-        case twins_content_type
+      def content_for(content_type, relative_path)
+        case content_type
           when /spec$/ then
             spec(relative_path)
           when "controller"
@@ -186,8 +186,8 @@ HELPER
         # end
       end
 
-      def twin_creation_confirmed?(relative_twin, twins_content_type)
-        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{twins_content_type}?"`
+      def twin_creation_confirmed?(relative_twin, content_type)
+        answer = `'#{ ENV['TM_SUPPORT_PATH'] }/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog' yesno-msgbox --no-cancel --icon document --informative-text "#{relative_twin}" --text "Create missing #{content_type}?"`
 
         answer.to_s.chomp == "1"
       end
@@ -204,17 +204,15 @@ HELPER
 
       def create_twin(twins_path)
         return if File.file?(twins_path)
-
-        relative_path = path_from_project_dir_to_twin(twins_path)
-
-
+        
         # returns one of: "filename" or "#filename spec" or "spec"
-        twins_content_type = content_type_of_twin(twins_path)
+        content_type  = content_type_of_twin(twins_path)
+        relative_path = path_from_project_dir_to_twin(twins_path)
 
         # twin_creation_confirmed? is response to a dialog box, confirming
         # creation of the twin
-        if twin_creation_confirmed?(relative_path, twins_content_type)
-          twins_content = content_for(twins_content_type, relative_path)
+        if twin_creation_confirmed?(relative_path, content_type)
+          twins_content = content_for(content_type, relative_path)
 
           write_and_open(twins_path, twins_content)
         end

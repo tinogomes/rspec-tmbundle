@@ -3,14 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>specify { ${1:behavior} }</string>
+	<string>expect(${1:subject}).to ${2:eql }$0
+</string>
 	<key>name</key>
-	<string>specify</string>
+	<string>expect to</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>s</string>
+	<string>e</string>
 	<key>uuid</key>
-	<string>304A6946-D954-4A26-9712-2A3AC6328A3D</string>
+	<string>A7A8C1D9-5E81-489E-936E-2D9A975B746F</string>
 </dict>
 </plist>

@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>specify { ${1:behavior} }</string>
+	<string>before${1:(${2::each})} { $0 }</string>
 	<key>name</key>
-	<string>specify</string>
+	<string>before {}</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>s</string>
+	<string>bef</string>
 	<key>uuid</key>
-	<string>304A6946-D954-4A26-9712-2A3AC6328A3D</string>
+	<string>AB2990D7-2924-44F9-8DB1-694AB862A58E</string>
 </dict>
 </plist>

@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>let(:${1:instance}) { $0 }</string>
+	<string>let(:${1:variable}) { $0 }</string>
 	<key>name</key>
-	<string>let</string>
+	<string>let { ... }</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>let</string>
+	<string>l</string>
 	<key>uuid</key>
-	<string>7F165347-6BF0-458B-AA0B-B8D8496C7607</string>
+	<string>09171030-EA7D-4F38-B265-C5FC212C943F</string>
 </dict>
 </plist>

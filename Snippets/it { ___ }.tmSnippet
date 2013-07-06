@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>specify { ${1:behavior} }</string>
+	<string>it { $0 }</string>
 	<key>name</key>
-	<string>specify</string>
+	<string>it { ... }</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>s</string>
+	<string>it</string>
 	<key>uuid</key>
-	<string>304A6946-D954-4A26-9712-2A3AC6328A3D</string>
+	<string>92617CFB-B2E2-4BE7-9AA8-845812AFC36A</string>
 </dict>
 </plist>

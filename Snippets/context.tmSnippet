@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>context "${1:context}" do
+	<string>context ${2:'$1'} do
   $0
 end</string>
 	<key>name</key>
@@ -11,8 +11,8 @@ end</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>con</string>
+	<string>cont</string>
 	<key>uuid</key>
-	<string>A373048F-BDEC-458B-8886-79058296C8DC</string>
+	<string>1D95DC98-35E0-4166-98A1-653AB03DEC5C</string>
 </dict>
 </plist>

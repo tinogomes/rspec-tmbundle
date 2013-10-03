@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>describe ${1:Type} do
+	<string>describe ${1:`#!/usr/bin/env ruby
+    puts (ENV['TM_FILENAME'] || 'class_name.rb').gsub(/_spec\.rb$/,'').gsub(/[_-]/, ' ').split(' ').map(&amp;:capitalize).join('')
+`} do
   $0
 end</string>
 	<key>name</key>
@@ -11,7 +13,7 @@ end</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>dest</string>
+	<string>des</string>
 	<key>uuid</key>
 	<string>2ED94046-DAF7-4C91-8D98-771513BB3804</string>
 </dict>

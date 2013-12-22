@@ -176,13 +176,11 @@ SPEC
 
       def write_and_open(path, content)
         `mkdir -p "#{File.dirname(path)}"`
-        `touch "#{path}"`
+        File.open(path, 'w') do |f|
+          f.write "# -*- encoding : utf-8 -*-
+require 'spec_helper'"
+        end
         `"$TM_SUPPORT_PATH/bin/mate" "#{path}"`
-        `osascript &>/dev/null -e 'tell app "SystemUIServer" to activate' -e 'tell app "TextMate" to activate'`
-
-        escaped_content = content.gsub("\n","\\n").gsub('$','\\$').gsub('"','\\\\\\\\\\\\"')
-
-        `osascript &>/dev/null -e "tell app \\"TextMate\\" to insert \\"#{escaped_content}\\" as snippet true"`
       end
     end
   end

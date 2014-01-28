@@ -35,11 +35,11 @@ module RSpec
       end
 
       def run(stdout, options)
-        formatter = ENV['TM_RSPEC_FORMATTER'] || 'textmate'
-
+        formatter  = ENV['TM_RSPEC_FORMATTER'] || 'RSpec::Mate::Formatters::TextMateFormatter'
         stderr     = StringIO.new
         old_stderr = $stderr
         $stderr    = stderr
+
 
         argv = options[:files].dup
         argv << '--format' << formatter

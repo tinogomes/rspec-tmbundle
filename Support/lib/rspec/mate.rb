@@ -7,6 +7,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/..')
 require 'rspec/mate/runner'
 require 'rspec/mate/options'
 require 'rspec/mate/switch_command'
+require 'rspec/mate/text_mate_formatter'
 
 rspec_lib = nil
 

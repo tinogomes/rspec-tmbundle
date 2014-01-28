@@ -3,15 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>${1:var} = double("${2:mock_name}"${3:, :null_object =&gt; true})
-$0</string>
+	<string>it_behaves_like "${1:name}"$0</string>
 	<key>name</key>
-	<string>mock</string>
+	<string>it_behaves_like</string>
 	<key>scope</key>
 	<string>source.ruby.rspec</string>
 	<key>tabTrigger</key>
-	<string>moc</string>
+	<string>itbl</string>
 	<key>uuid</key>
-	<string>AA3D9F87-FE8F-4808-A732-F368CCB9DED6</string>
+	<string>C15B941B-ED25-4403-BA7F-AC626984D898</string>
 </dict>
 </plist>

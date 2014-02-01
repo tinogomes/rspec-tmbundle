@@ -28,6 +28,44 @@ module RSpec
           @snippet_extractor ||= RSpec::Core::Formatters::SnippetExtractor.new
           "    <pre class=\"ruby\"><code>#{@snippet_extractor.snippet(backtrace)}</code></pre>"
         end
+        
+        def example_failed(example)
+          # super(example)
+
+          unless @header_red
+            @header_red = true
+            @printer.make_header_red
+          end
+
+          unless @example_group_red
+            @example_group_red = true
+            @printer.make_example_group_header_red(example_group_number)
+          end
+
+          @printer.move_progress(percent_done)
+
+          exception = example.metadata[:execution_result][:exception]
+          exception_details = if exception
+            {
+              :message => exception.message,
+              :backtrace => format_backtrace(exception.backtrace, example).join("\n")
+            }
+          else
+            false
+          end
+          extra = extra_failure_content(exception)
+
+          @printer.print_example_failed(
+            example.execution_result[:pending_fixed],
+            example.description,
+            example.execution_result[:run_time],
+            @failed_examples.size,
+            exception_details,
+            (extra == "") ? false : extra,
+            false
+          )
+          @printer.flush
+        end
       end
     end
   end

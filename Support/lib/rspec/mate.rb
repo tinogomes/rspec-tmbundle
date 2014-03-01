@@ -7,7 +7,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/..')
 require 'rspec/mate/runner'
 require 'rspec/mate/options'
 require 'rspec/mate/switch_command'
-require 'rspec/mate/text_mate_formatter'
 
 # TODO: move to Options
 def bundler_option?
@@ -54,6 +53,9 @@ def rspec2?
   defined?(RSpec::Core)
 end
 
+def rspec3?
+  defined?(RSpec::Core) && RSpec::Core::Version::STRING.start_with?("3.")
+end
 
 rspec_lib = nil
 
@@ -85,6 +87,7 @@ elsif rspec_lib
 else
   begin
     require 'rspec/core'
+    require 'rspec/mate/text_mate_formatter' if rspec3?
   rescue LoadError
     require 'spec/autorun'
   end

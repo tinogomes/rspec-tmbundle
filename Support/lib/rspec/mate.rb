@@ -87,7 +87,6 @@ elsif rspec_lib
 else
   begin
     require 'rspec/core'
-    require 'rspec/mate/text_mate_formatter' if rspec3?
   rescue LoadError
     require 'spec/autorun'
   end

@@ -9,8 +9,6 @@ require 'rspec/mate/options'
 require 'rspec/mate/switch_command'
 require 'rspec/mate/text_mate_formatter'
 
-rspec_lib = nil
-
 # TODO: move to Options
 def bundler_option?
   RSpec::Mate::Options['--bundler']
@@ -52,6 +50,12 @@ def use_bundler?
   bundler_option? || (gemfile? && !skip_bundler_option?)
 end
 
+def rspec2?
+  defined?(RSpec::Core)
+end
+
+
+rspec_lib = nil
 
 if use_bundler?
   require "rubygems"
@@ -86,6 +90,3 @@ else
   end
 end
 
-def rspec2?
-  defined?(RSpec::Core)
-end

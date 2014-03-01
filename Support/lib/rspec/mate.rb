@@ -49,7 +49,7 @@ def gemfile?
 end
 
 def use_bundler?
-  bundler_option? || (gemfile? && skip_bundler_option?)
+  bundler_option? || (gemfile? && !skip_bundler_option?)
 end
 
 

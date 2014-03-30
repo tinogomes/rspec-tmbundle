@@ -7,9 +7,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/..')
 require 'rspec/mate/runner'
 require 'rspec/mate/options'
 require 'rspec/mate/switch_command'
-require 'rspec/mate/text_mate_formatter'
-
-rspec_lib = nil
 
 # TODO: move to Options
 def bundler_option?
@@ -49,9 +46,18 @@ def gemfile?
 end
 
 def use_bundler?
-  bundler_option? || (gemfile? && skip_bundler_option?)
+  bundler_option? || (gemfile? && !skip_bundler_option?)
 end
 
+def rspec2?
+  defined?(RSpec::Core)
+end
+
+def rspec3?
+  defined?(RSpec::Core) && RSpec::Core::Version::STRING.start_with?("3.")
+end
+
+rspec_lib = nil
 
 if use_bundler?
   require "rubygems"
@@ -86,6 +92,3 @@ else
   end
 end
 
-def rspec2?
-  defined?(RSpec::Core)
-end
